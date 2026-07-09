@@ -14,7 +14,7 @@ after_install = "lms_plus.setup.after_install"
 permission_query_conditions = {
     "LMS Batch": "lms_plus.api.manager.get_batch_permission_query",
 }
-after_migrate  = "lms_plus.setup.after_install"
+after_migrate = "lms_plus.setup.after_migrate"
 
 doc_events = {
     "LMS Batch": {
