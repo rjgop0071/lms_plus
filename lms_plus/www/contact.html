@@ -1,0 +1,24 @@
+{% extends "templates/web.html" %}
+
+{% block page_content %}
+<div class="container my-5" style="max-width: 600px;">
+  <h1>{{ title }}</h1>
+  <p class="text-muted">Reach out to us for help with your courses or account.</p>
+
+  <div class="card mt-4 p-4">
+    {% if support_email %}
+    <p><strong>Email:</strong>
+      <a href="mailto:{{ support_email }}">{{ support_email }}</a>
+    </p>
+    {% endif %}
+
+    {% if support_phone %}
+    <p><strong>Phone:</strong> {{ support_phone }}</p>
+    {% endif %}
+
+    <hr>
+    <p>You can also visit our <a href="/lms-plus/faq">FAQ page</a>
+       or raise a support ticket via the Helpdesk.</p>
+  </div>
+</div>
+{% endblock %}

@@ -1,0 +1,38 @@
+{
+  "name": "LMS Plus Cohort Member",
+  "module": "LMS Plus",
+  "doctype": "DocType",
+  "istable": 1,
+  "fields": [
+    {
+      "fieldname": "user",
+      "fieldtype": "Link",
+      "label": "User",
+      "options": "User",
+      "reqd": 1,
+      "in_list_view": 1
+    },
+    {
+      "fieldname": "full_name",
+      "fieldtype": "Data",
+      "label": "Full Name",
+      "fetch_from": "user.full_name",
+      "read_only": 1,
+      "in_list_view": 1
+    },
+    {
+      "fieldname": "email",
+      "fieldtype": "Data",
+      "label": "Email",
+      "fetch_from": "user.email",
+      "read_only": 1,
+      "in_list_view": 1
+    },
+    {
+      "fieldname": "joined_on",
+      "fieldtype": "Date",
+      "label": "Joined On",
+      "default": "Today"
+    }
+  ]
+}

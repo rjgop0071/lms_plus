@@ -1,0 +1,8 @@
+[build-system]
+requires = ["flit_core >=3.4,<4"]
+build-backend = "flit_core.buildapi"
+
+[project]
+name = "lms_plus"
+version = "0.0.1"
+description = "LMS Plus — Custom extension for Frappe LMS"

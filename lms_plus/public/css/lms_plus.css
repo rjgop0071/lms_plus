@@ -1,0 +1,28 @@
+/* lms_plus.css — injected into all LMS web pages via hooks.py
+   Override LMS branding/layout here without touching LMS source files. */
+
+:root {
+  /* Swap these to match client brand colours */
+  --lms-plus-primary: #2490ef;
+  --lms-plus-primary-dark: #1a6faf;
+  --lms-plus-accent: #f59e0b;
+}
+
+/* Example: override LMS primary button colour */
+.btn-primary,
+.lms-btn-primary {
+  background-color: var(--lms-plus-primary) !important;
+  border-color: var(--lms-plus-primary) !important;
+}
+
+.btn-primary:hover {
+  background-color: var(--lms-plus-primary-dark) !important;
+}
+
+/* Pop-up notification badge */
+.lms-plus-badge-toast {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.9rem;
+}

@@ -1,0 +1,56 @@
+{
+  "name": "LMS Plus Cohort",
+  "module": "LMS Plus",
+  "doctype": "DocType",
+  "is_submittable": 0,
+  "track_changes": 1,
+  "naming_rule": "By fieldname",
+  "autoname": "field:cohort_name",
+  "fields": [
+    {
+      "fieldname": "cohort_name",
+      "fieldtype": "Data",
+      "label": "Cohort Name",
+      "reqd": 1,
+      "unique": 1
+    },
+    {
+      "fieldname": "company",
+      "fieldtype": "Link",
+      "label": "Company",
+      "options": "Company"
+    },
+    {
+      "fieldname": "manager",
+      "fieldtype": "Link",
+      "label": "Team Manager",
+      "options": "User"
+    },
+    {
+      "fieldname": "description",
+      "fieldtype": "Small Text",
+      "label": "Description"
+    },
+    {
+      "fieldname": "is_active",
+      "fieldtype": "Check",
+      "label": "Active",
+      "default": "1"
+    },
+    {
+      "fieldname": "members_section",
+      "fieldtype": "Section Break",
+      "label": "Members"
+    },
+    {
+      "fieldname": "members",
+      "fieldtype": "Table",
+      "label": "Members",
+      "options": "LMS Plus Cohort Member"
+    }
+  ],
+  "permissions": [
+    { "role": "LMS Manager", "read": 1, "write": 1, "create": 1, "delete": 1 },
+    { "role": "Team Manager", "read": 1, "write": 1, "create": 1 }
+  ]
+}

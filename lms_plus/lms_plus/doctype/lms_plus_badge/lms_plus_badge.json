@@ -1,0 +1,61 @@
+{
+  "name": "LMS Plus Badge",
+  "module": "LMS Plus",
+  "doctype": "DocType",
+  "track_changes": 1,
+  "naming_rule": "Expression",
+  "autoname": "BADGE-.#####",
+  "fields": [
+    {
+      "fieldname": "user",
+      "fieldtype": "Link",
+      "label": "User",
+      "options": "User",
+      "reqd": 1,
+      "in_list_view": 1
+    },
+    {
+      "fieldname": "badge_type",
+      "fieldtype": "Select",
+      "label": "Badge Type",
+      "options": "Course Completion\nQuiz Topper\nStreak\nCustom",
+      "reqd": 1,
+      "in_list_view": 1
+    },
+    {
+      "fieldname": "course",
+      "fieldtype": "Link",
+      "label": "Course",
+      "options": "LMS Course",
+      "depends_on": "eval:doc.badge_type=='Course Completion'"
+    },
+    {
+      "fieldname": "title",
+      "fieldtype": "Data",
+      "label": "Badge Title",
+      "reqd": 1,
+      "in_list_view": 1
+    },
+    {
+      "fieldname": "awarded_on",
+      "fieldtype": "Date",
+      "label": "Awarded On",
+      "default": "Today",
+      "reqd": 1
+    },
+    {
+      "fieldname": "icon",
+      "fieldtype": "Attach Image",
+      "label": "Icon"
+    },
+    {
+      "fieldname": "remarks",
+      "fieldtype": "Small Text",
+      "label": "Remarks"
+    }
+  ],
+  "permissions": [
+    { "role": "LMS Manager", "read": 1, "write": 1, "create": 1, "delete": 1 },
+    { "role": "LMS Learner", "read": 1 }
+  ]
+}

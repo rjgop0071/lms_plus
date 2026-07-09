@@ -1,0 +1,11 @@
+__pycache__/
+*.py[cod]
+*.pyc
+.env
+node_modules/
+*.egg-info/
+dist/
+build/
+.DS_Store
+*:Zone.Identifier
+*.Zone.Identifier

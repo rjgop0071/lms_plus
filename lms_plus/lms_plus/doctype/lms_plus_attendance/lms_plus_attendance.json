@@ -1,0 +1,52 @@
+{
+  "name": "LMS Plus Attendance",
+  "module": "LMS Plus",
+  "doctype": "DocType",
+  "is_submittable": 1,
+  "track_changes": 1,
+  "naming_rule": "Expression",
+  "autoname": "ATT-.YYYY.-.#####",
+  "fields": [
+    {
+      "fieldname": "user",
+      "fieldtype": "Link",
+      "label": "User",
+      "options": "User",
+      "reqd": 1,
+      "in_list_view": 1
+    },
+    {
+      "fieldname": "course",
+      "fieldtype": "Link",
+      "label": "Course",
+      "options": "LMS Course",
+      "reqd": 1,
+      "in_list_view": 1
+    },
+    {
+      "fieldname": "session_date",
+      "fieldtype": "Date",
+      "label": "Session Date",
+      "reqd": 1,
+      "in_list_view": 1
+    },
+    {
+      "fieldname": "status",
+      "fieldtype": "Select",
+      "label": "Status",
+      "options": "Present\nAbsent\nLate",
+      "reqd": 1,
+      "in_list_view": 1
+    },
+    {
+      "fieldname": "remarks",
+      "fieldtype": "Small Text",
+      "label": "Remarks"
+    }
+  ],
+  "permissions": [
+    { "role": "LMS Manager", "read": 1, "write": 1, "create": 1, "submit": 1 },
+    { "role": "Team Manager", "read": 1, "write": 1, "create": 1, "submit": 1 },
+    { "role": "LMS Learner", "read": 1 }
+  ]
+}

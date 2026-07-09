@@ -1,0 +1,32 @@
+{% extends "templates/web.html" %}
+
+{% block page_content %}
+<div class="container my-5">
+  <h1>{{ title }}</h1>
+
+  {% set categories = faqs | map(attribute='category') | unique | list %}
+
+  {% for category in categories %}
+  <h3 class="mt-4">{{ category or 'General' }}</h3>
+  <div class="accordion" id="faq-{{ category }}">
+    {% for faq in faqs if faq.category == category %}
+    <div class="accordion-item">
+      <h2 class="accordion-header">
+        <button class="accordion-button collapsed" type="button"
+          data-bs-toggle="collapse"
+          data-bs-target="#faq-answer-{{ loop.index }}-{{ category }}">
+          {{ faq.question }}
+        </button>
+      </h2>
+      <div id="faq-answer-{{ loop.index }}-{{ category }}"
+           class="accordion-collapse collapse">
+        <div class="accordion-body">
+          {{ faq.answer }}
+        </div>
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+  {% endfor %}
+</div>
+{% endblock %}

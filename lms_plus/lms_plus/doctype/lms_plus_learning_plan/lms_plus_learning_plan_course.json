@@ -1,0 +1,36 @@
+{
+  "name": "LMS Plus Learning Plan Course",
+  "module": "LMS Plus",
+  "doctype": "DocType",
+  "istable": 1,
+  "fields": [
+    {
+      "fieldname": "course",
+      "fieldtype": "Link",
+      "label": "Course",
+      "options": "LMS Course",
+      "reqd": 1,
+      "in_list_view": 1
+    },
+    {
+      "fieldname": "course_title",
+      "fieldtype": "Data",
+      "label": "Course Title",
+      "fetch_from": "course.title",
+      "read_only": 1,
+      "in_list_view": 1
+    },
+    {
+      "fieldname": "order",
+      "fieldtype": "Int",
+      "label": "Order",
+      "in_list_view": 1
+    },
+    {
+      "fieldname": "mandatory",
+      "fieldtype": "Check",
+      "label": "Mandatory",
+      "default": "1"
+    }
+  ]
+}
