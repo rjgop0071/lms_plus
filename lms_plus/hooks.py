@@ -7,8 +7,6 @@ app_license = "MIT"
 
 required_apps = ["frappe", "lms"]
 
-# Force lms_plus templates to take precedence over lms templates
-template_apps = ["lms_plus", "lms", "frappe"]
 
 after_install = "lms_plus.setup.after_install"
 
