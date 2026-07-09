@@ -9,3 +9,4 @@ build/
 .DS_Store
 *:Zone.Identifier
 *.Zone.Identifier
+lms_plus/www/_lms.html

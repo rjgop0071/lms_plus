@@ -1,15 +1,57 @@
 import frappe
+import os
 
 
 def after_install():
     create_custom_fields()
     create_property_setters()
+    sync_lms_template()
+
+
+def after_migrate():
+    create_custom_fields()
+    create_property_setters()
+    sync_lms_template()
+
+
+def sync_lms_template():
+    """
+    Generates _lms.html from the currently installed LMS version
+    and injects our lms_plus.js script tag.
+    This runs on every bench migrate so it stays in sync with LMS updates.
+    """
+    try:
+        lms_html = frappe.get_app_path("lms", "www", "_lms.html")
+        our_html = frappe.get_app_path("lms_plus", "www", "_lms.html")
+
+        if not os.path.exists(lms_html):
+            frappe.logger().warning("LMS Plus: lms/_lms.html not found — skipping template sync")
+            return
+
+        with open(lms_html, "r") as f:
+            content = f.read()
+
+        # Inject our script tag before </body>
+        script_tag = '    <script src="/assets/lms_plus/js/lms_plus.js"></script>\n'
+        if "lms_plus.js" not in content:
+            content = content.replace("</body>", script_tag + "</body>")
+
+        os.makedirs(os.path.dirname(our_html), exist_ok=True)
+        with open(our_html, "w") as f:
+            f.write(content)
+
+        frappe.logger().info("LMS Plus: _lms.html synced successfully from LMS")
+    except Exception:
+        frappe.log_error(
+            title="LMS Plus: _lms.html sync failed",
+            message=frappe.get_traceback(),
+        )
 
 
 def create_custom_fields():
     """
-    Adds Department and Manager custom fields to LMS Batch.
-    LMS core is never touched — these are Custom Field records only.
+    Adds custom fields to LMS Batch and LMS Course Progress.
+    LMS core is never touched.
     """
     fields = [
         {
@@ -59,8 +101,6 @@ def create_property_setters():
     """
     Removes mandatory constraint from LMS Batch date, time,
     description, instructors, and batch details fields.
-    Only Title remains mandatory.
-    LMS core is never touched — these are Property Setter records only.
     """
     fields_to_fix = [
         "start_date", "end_date", "start_time", "end_time",
@@ -69,10 +109,8 @@ def create_property_setters():
 
     for fieldname in fields_to_fix:
         ps_name = f"LMS Batch-{fieldname}-reqd"
-
         if frappe.db.exists("Property Setter", ps_name):
             continue
-
         frappe.get_doc({
             "doctype": "Property Setter",
             "name": ps_name,
