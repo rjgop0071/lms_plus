@@ -51,6 +51,10 @@ website_route_rules = [
 web_include_css = ["assets/lms_plus/css/lms_plus.css"]
 web_include_js  = ["assets/lms_plus/js/lms_plus.js"]
 
+# app_include injects into ALL pages including LMS Vue SPA
+# This is the Frappe Cloud compatible way to inject our JS
+app_include_js = ["/assets/lms_plus/js/lms_plus.js"]
+
 # Desk JS — adds custom buttons to LMS DocType forms
 doctype_js = {
     "LMS Batch": "public/js/lms_batch.js",
