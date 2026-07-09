@@ -1,15 +1,20 @@
 # lms_plus/www/_lms.py
-# Extends LMS boot data with current user info and roles.
-import frappe
-from lms.www._lms import get_context as _lms_get_context
+# Extends LMS boot with user roles for portal JS permission checks.
+# Falls back cleanly if LMS context is unavailable.
 
 no_cache = 1
 
 
 def get_context():
-    context = _lms_get_context()
+    try:
+        from lms.www._lms import get_context as _lms_get_context
+        context = _lms_get_context()
+    except Exception:
+        import frappe
+        context = frappe._dict()
+        context.boot = frappe._dict()
 
-    # Add user identity and roles to boot so JS can check permissions
+    import frappe
     user = frappe.session.user
     roles = frappe.get_roles(user)
 
