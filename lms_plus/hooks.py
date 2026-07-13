@@ -65,4 +65,5 @@ fixtures = [
     "Property Setter",
     "Notification",
     {"dt": "Role", "filters": [["role_name", "in", ["LMS Manager", "Team Manager", "LMS Learner"]]]},
+    {"dt": "Custom DocPerm", "filters": [["role", "=", "LMS Manager"]]},
 ]

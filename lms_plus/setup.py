@@ -5,12 +5,14 @@ import os
 def after_install():
     create_custom_fields()
     create_property_setters()
+    create_role_permissions()
     sync_lms_template()
 
 
 def after_migrate():
     create_custom_fields()
     create_property_setters()
+    create_role_permissions()
     sync_lms_template()
 
 
@@ -152,4 +154,30 @@ def create_property_setters():
             "value": "0",
             "property_type": "Check",
         }).insert(ignore_permissions=True)
+    frappe.db.commit()
+
+
+def create_role_permissions():
+    """
+    Grants LMS Manager the same content-editing rights that Course Creator
+    and Moderator already have. LMS Manager is an lms_plus role and was
+    never wired into the core LMS DocPerms, so course/lesson/quiz editing
+    (Save, Unpublish, visibility, pricing, etc.) silently fails permission
+    checks for LMS Managers even though the lms_plus UI shows those controls.
+    """
+    from frappe.permissions import add_permission, update_permission_property
+
+    doctypes = ["LMS Course", "Course Chapter", "Course Lesson", "LMS Quiz"]
+    rights = [
+        "read", "write", "create", "delete",
+        "email", "export", "import", "print", "report", "share",
+    ]
+
+    for doctype in doctypes:
+        if not frappe.db.exists("Custom DocPerm", {"parent": doctype, "role": "LMS Manager"}):
+            add_permission(doctype, "LMS Manager", 0)
+        for right in rights:
+            update_permission_property(doctype, "LMS Manager", 0, right, 1)
+
+    frappe.clear_cache()
     frappe.db.commit()
