@@ -8,7 +8,7 @@ def after_enrollment(doc, method=None):
 
 
 def after_unenrollment(doc, method=None):
-    """Doc event: fires after LMS Enrollment is cancelled."""
+    """Doc event: fires after LMS Enrollment is deleted."""
     frappe.logger().info(
         f"LMS Plus: {doc.member} unenrolled from {doc.course}"
     )
@@ -54,15 +54,14 @@ def enroll_user(user: str, course: str) -> dict:
 
 @frappe.whitelist()
 def unenroll_user(user: str, course: str) -> dict:
-    """Cancel a single user's enrollment."""
+    """Delete a single user's enrollment."""
     name = frappe.db.get_value(
         "LMS Enrollment", {"member": user, "course": course}, "name"
     )
     if not name:
         frappe.throw(_("Enrollment not found for user {0} in course {1}.").format(user, course))
 
-    enrollment = frappe.get_doc("LMS Enrollment", name)
-    enrollment.cancel()
+    frappe.delete_doc("LMS Enrollment", name, ignore_permissions=True, force=True)
 
     return {"status": "unenrolled", "user": user, "course": course}
 

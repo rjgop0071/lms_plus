@@ -29,7 +29,7 @@ doc_events = {
     },
     "LMS Enrollment": {
         "after_insert": "lms_plus.api.enrollment.after_enrollment",
-        "on_cancel":    "lms_plus.api.enrollment.after_unenrollment",
+        "on_trash":     "lms_plus.api.enrollment.after_unenrollment",
     },
     "User": {
         "after_insert": "lms_plus.api.user.after_user_created",

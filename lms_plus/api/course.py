@@ -60,11 +60,14 @@ def import_gift_quiz(course: str, gift_text: str, quiz_title: str) -> dict:
     quiz = frappe.new_doc("LMS Quiz")
     quiz.title  = cstr(quiz_title)
     quiz.course = course
+    quiz.passing_percentage = 60
 
     for q in questions:
+        question_doc = _create_question_from_gift(q)
         quiz.append("questions", {
-            "question": q["question"],
-            "type":     "Multiple Choice",
+            "question": question_doc.name,
+            "type":     "Choices",
+            "marks":    1,
         })
 
     quiz.insert(ignore_permissions=False)
@@ -74,6 +77,22 @@ def import_gift_quiz(course: str, gift_text: str, quiz_title: str) -> dict:
         "questions_imported": len(questions),
         "status": "created",
     }
+
+
+def _create_question_from_gift(q: dict):
+    """Create an LMS Question record from a parsed GIFT question dict (up to 4 options)."""
+    fields = {
+        "doctype": "LMS Question",
+        "question": q["question"],
+        "type": "Choices",
+    }
+    for i, option in enumerate(q["options"][:4], 1):
+        fields[f"option_{i}"] = option
+        fields[f"is_correct_{i}"] = 1 if option == q["correct"] else 0
+
+    question_doc = frappe.get_doc(fields)
+    question_doc.insert(ignore_permissions=True)
+    return question_doc
 
 
 def _parse_gift(text: str) -> list[dict]:
