@@ -159,21 +159,42 @@ def create_property_setters():
 
 def create_role_permissions():
     """
-    Grants LMS Manager the same content-editing rights that Course Creator
-    and Moderator already have. LMS Manager is an lms_plus role and was
-    never wired into the core LMS DocPerms, so course/lesson/quiz editing
-    (Save, Unpublish, visibility, pricing, etc.) silently fails permission
-    checks for LMS Managers even though the lms_plus UI shows those controls.
+    Grants LMS Manager the same full CRUD rights that Moderator already has
+    across the entire LMS content/operations domain. LMS Manager is an
+    lms_plus role and was never wired into the core LMS DocPerms, so course,
+    batch, certificate, quiz etc. editing silently failed permission checks
+    for LMS Managers even though the lms_plus UI shows those controls.
+
+    This list mirrors every non-child-table doctype where Moderator (LMS's
+    own broadest built-in role) has full read/write/create rights — i.e.
+    LMS Manager becomes "admin, scoped to the LMS domain" rather than a
+    site-wide Administrator equivalent.
     """
     from frappe.permissions import add_permission, update_permission_property
 
-    doctypes = ["LMS Course", "Course Chapter", "Course Lesson", "LMS Quiz"]
+    doctypes = [
+        "Course Chapter", "Course Evaluator", "Course Lesson",
+        "LMS Assignment", "LMS Assignment Submission",
+        "LMS Badge", "LMS Badge Assignment",
+        "LMS Batch", "LMS Batch Enrollment", "LMS Batch Feedback",
+        "LMS Category", "LMS Certificate", "LMS Certificate Evaluation",
+        "LMS Certificate Request", "LMS Coupon", "LMS Course",
+        "LMS Course Progress", "LMS Course Review", "LMS Enrollment",
+        "LMS Google Meet Settings", "LMS Lesson Note",
+        "LMS Live Class", "LMS Live Class Participant", "LMS Payment",
+        "LMS Program", "LMS Programming Exercise",
+        "LMS Programming Exercise Submission", "LMS Question", "LMS Quiz",
+        "LMS Settings", "LMS Source", "LMS Timetable Template",
+        "LMS Video Watch Duration", "LMS Zoom Settings",
+    ]
     rights = [
         "read", "write", "create", "delete",
         "email", "export", "import", "print", "report", "share",
     ]
 
     for doctype in doctypes:
+        if not frappe.db.exists("DocType", doctype):
+            continue
         if not frappe.db.exists("Custom DocPerm", {"parent": doctype, "role": "LMS Manager"}):
             add_permission(doctype, "LMS Manager", 0)
         for right in rights:
