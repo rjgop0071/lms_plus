@@ -8,6 +8,37 @@ def after_user_created(doc, method=None):
     frappe.logger().info(f"LMS Plus: new user created — {doc.name}")
 
 
+def sync_moderator_role(doc, method=None):
+    """
+    Doc event on Has Role — fires whenever a role is added to a User.
+
+    Core LMS gates course/batch access and the instructor dashboard with
+    hardcoded role-name checks (has_moderator_role, has_course_instructor_role
+    in lms/lms/utils.py) that only recognize "Moderator", "Course Creator",
+    and "Batch Evaluator" by exact name — not "LMS Manager". Our Custom
+    DocPerm grants (see setup.create_role_permissions) satisfy
+    frappe.has_permission() but do nothing for these checks, so an
+    LMS-Manager-only user could create/write documents via the API yet
+    still see the plain learner dashboard and get blocked from course/batch
+    pages. Mirroring "Moderator" onto every LMS Manager keeps both paths
+    in sync.
+    """
+    if doc.parenttype != "User" or doc.role != "LMS Manager":
+        return
+
+    if frappe.db.exists("Has Role", {"parent": doc.parent, "parenttype": "User", "role": "Moderator"}):
+        return
+
+    frappe.get_doc({
+        "doctype": "Has Role",
+        "parent": doc.parent,
+        "parenttype": "User",
+        "parentfield": "roles",
+        "role": "Moderator",
+    }).insert(ignore_permissions=True)
+    frappe.clear_cache(user=doc.parent)
+
+
 # ─── Individual user creation ──────────────────────────────────────────────────
 
 @frappe.whitelist()

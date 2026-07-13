@@ -6,6 +6,7 @@ def after_install():
     create_custom_fields()
     create_property_setters()
     create_role_permissions()
+    backfill_moderator_role()
     sync_lms_template()
 
 
@@ -13,6 +14,7 @@ def after_migrate():
     create_custom_fields()
     create_property_setters()
     create_role_permissions()
+    backfill_moderator_role()
     sync_lms_template()
 
 
@@ -199,6 +201,30 @@ def create_role_permissions():
             add_permission(doctype, "LMS Manager", 0)
         for right in rights:
             update_permission_property(doctype, "LMS Manager", 0, right, 1)
+
+    frappe.clear_cache()
+    frappe.db.commit()
+
+
+def backfill_moderator_role():
+    """
+    One-time (idempotent) catch-up for users who already had LMS Manager
+    assigned before api.user.sync_moderator_role existed. See that
+    function's docstring for why LMS Manager needs to carry Moderator too.
+    """
+    users = frappe.get_all(
+        "Has Role", filters={"role": "LMS Manager", "parenttype": "User"}, pluck="parent"
+    )
+    for user in users:
+        if frappe.db.exists("Has Role", {"parent": user, "parenttype": "User", "role": "Moderator"}):
+            continue
+        frappe.get_doc({
+            "doctype": "Has Role",
+            "parent": user,
+            "parenttype": "User",
+            "parentfield": "roles",
+            "role": "Moderator",
+        }).insert(ignore_permissions=True)
 
     frappe.clear_cache()
     frappe.db.commit()

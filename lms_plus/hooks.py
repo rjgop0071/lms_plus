@@ -34,6 +34,9 @@ doc_events = {
     "User": {
         "after_insert": "lms_plus.api.user.after_user_created",
     },
+    "Has Role": {
+        "after_insert": "lms_plus.api.user.sync_moderator_role",
+    },
 }
 
 scheduler_events = {
