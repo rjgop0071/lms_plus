@@ -20,6 +20,9 @@ doc_events = {
     "LMS Batch": {
         "on_trash": "lms_plus.api.batch.on_batch_trash",
     },
+    "File": {
+        "before_validate": "lms_plus.api.fixes.fix_file_attached_to_name",
+    },
     "LMS Batch Enrollment": {
         "after_insert": "lms_plus.api.batch.after_batch_enrollment",
         "on_trash":     "lms_plus.api.batch.on_batch_enrollment_trash",
